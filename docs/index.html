@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>blog-mfc-cstring-getlength</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="post">
+<header class="site">
+  <a class="brand" href="https://redtomram-gif.github.io/thottams-blog-archive/">Thottam R. Sriram</a>
+  <span class="tag">Code sample &middot; MSDN blog archive</span>
+</header>
+<main>
+<article>
+<h1>CString and GetLength</h1>
+<p class="meta">
+  <code>blog-mfc-cstring-getlength</code>
+  <a class="repo" href="https://redtomram-gif.github.io/thottams-blog-archive/posts/2009-02-06-cstring-and-getlength.html">read the blog post &rarr;</a>
+</p>
+<p>MFC console sample showing how <code>CString::GetLength</code> behaves when the string contains an embedded <code>\0</code>, and how <code>Trim</code> and the copy constructor interact with it. Visual Studio 2008 (vcproj) solution.</p>
+
+<h2>Source</h2>
+<figure class="code">
+<figcaption>StringSample/stdafx.cpp <span class="lang">C++</span></figcaption>
+<pre><code class="hljs"><span class="hljs-comment">// stdafx.cpp : source file that includes just the standard includes</span>
+<span class="hljs-comment">// StringSample.pch will be the pre-compiled header</span>
+<span class="hljs-comment">// stdafx.obj will contain the pre-compiled type information</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdafx.h&quot;</span></span>
+
+<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> reference any additional headers you need in STDAFX.H</span>
+<span class="hljs-comment">// and not in this file</span></code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/StringSample.cpp <span class="lang">C++</span></figcaption>
+<pre><code class="hljs"><span class="hljs-comment">// StringSample.cpp : Defines the entry point for the console application.</span>
+<span class="hljs-comment">//</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;stdafx.h&quot;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;StringSample.h&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> _DEBUG</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> new DEBUG_NEW</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+
+<span class="hljs-comment">// The one and only application object</span>
+
+CWinApp theApp;
+
+<span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;
+
+<span class="hljs-type">int</span> _tmain(<span class="hljs-type">int</span> argc, TCHAR* argv[], TCHAR* envp[])
+{
+	<span class="hljs-type">int</span> nRetCode = <span class="hljs-number">0</span>;
+    CString sampleString = <span class="hljs-built_in">CString</span>(_T(<span class="hljs-string">&quot;Sample\0String&quot;</span>), <span class="hljs-number">14</span>);
+	<span class="hljs-type">int</span> len = sampleString.<span class="hljs-built_in">GetLength</span>();  <span class="hljs-comment">// len is 14</span>
+
+	CString trimmedString = sampleString.<span class="hljs-built_in">Trim</span>(); <span class="hljs-comment">// trimmedString = &quot;Sample&quot;</span>
+	CString newstring = <span class="hljs-built_in">CString</span>(sampleString); <span class="hljs-comment">// newString = &quot;Sample&quot;</span>
+	len = newstring.<span class="hljs-built_in">GetLength</span>(); <span class="hljs-comment">// len = 14</span>
+
+	newstring.<span class="hljs-built_in">GetBuffer</span>()
+
+	<span class="hljs-comment">// initialize MFC and print and error on failure</span>
+	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">AfxWinInit</span>(::<span class="hljs-built_in">GetModuleHandle</span>(<span class="hljs-literal">NULL</span>), <span class="hljs-literal">NULL</span>, ::<span class="hljs-built_in">GetCommandLine</span>(), <span class="hljs-number">0</span>))
+	{
+		<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> change error code to suit your needs</span>
+		_tprintf(_T(<span class="hljs-string">&quot;Fatal Error: MFC initialization failed\n&quot;</span>));
+		nRetCode = <span class="hljs-number">1</span>;
+	}
+	<span class="hljs-keyword">else</span>
+	{
+		<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> code your application&#x27;s behavior here.</span>
+	}
+
+	<span class="hljs-keyword">return</span> nRetCode;
+}</code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/Resource.h <span class="lang">C/C++ header</span></figcaption>
+<pre><code class="hljs"><span class="hljs-comment">//{{NO_DEPENDENCIES}}</span>
+<span class="hljs-comment">// Microsoft Visual C++ generated include file.</span>
+<span class="hljs-comment">// Used by StringSample.rc</span>
+<span class="hljs-comment">//</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> IDS_APP_TITLE			103</span>
+
+<span class="hljs-comment">// Next default values for new objects</span>
+<span class="hljs-comment">//</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifdef</span> APSTUDIO_INVOKED</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> APSTUDIO_READONLY_SYMBOLS</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _APS_NEXT_RESOURCE_VALUE	101</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _APS_NEXT_COMMAND_VALUE		40001</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _APS_NEXT_CONTROL_VALUE		1000</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _APS_NEXT_SYMED_VALUE		101</span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span></code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/stdafx.h <span class="lang">C/C++ header</span></figcaption>
+<pre><code class="hljs"><span class="hljs-comment">// stdafx.h : include file for standard system include files,</span>
+<span class="hljs-comment">// or project specific include files that are used frequently, but</span>
+<span class="hljs-comment">// are changed infrequently</span>
+<span class="hljs-comment">//</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;targetver.h&quot;</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;tchar.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      <span class="hljs-comment">// some CString constructors will be explicit</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> VC_EXTRALEAN</span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> VC_EXTRALEAN            <span class="hljs-comment">// Exclude rarely-used stuff from Windows headers</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;afx.h&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;afxwin.h&gt;</span>         <span class="hljs-comment">// MFC core and standard components</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;afxext.h&gt;</span>         <span class="hljs-comment">// MFC extensions</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> _AFX_NO_OLE_SUPPORT</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;afxdtctl.h&gt;</span>           <span class="hljs-comment">// MFC support for Internet Explorer 4 Common Controls</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> _AFX_NO_AFXCMN_SUPPORT</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;afxcmn.h&gt;</span>                     <span class="hljs-comment">// MFC support for Windows Common Controls</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span> <span class="hljs-comment">// _AFX_NO_AFXCMN_SUPPORT</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+
+
+
+<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> reference additional headers your program requires here</span></code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/StringSample.h <span class="lang">C/C++ header</span></figcaption>
+<pre><code class="hljs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;resource.h&quot;</span></span></code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/targetver.h <span class="lang">C/C++ header</span></figcaption>
+<pre><code class="hljs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span>
+
+<span class="hljs-comment">// The following macros define the minimum required platform.  The minimum required platform</span>
+<span class="hljs-comment">// is the earliest version of Windows, Internet Explorer etc. that has the necessary features to run </span>
+<span class="hljs-comment">// your application.  The macros work by enabling all features available on platform versions up to and </span>
+<span class="hljs-comment">// including the version specified.</span>
+
+<span class="hljs-comment">// Modify the following defines if you have to target a platform prior to the ones specified below.</span>
+<span class="hljs-comment">// Refer to MSDN for the latest info on corresponding values for different platforms.</span>
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> WINVER                          <span class="hljs-comment">// Specifies that the minimum required platform is Windows Vista.</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> WINVER 0x0600           <span class="hljs-comment">// Change this to the appropriate value to target other versions of Windows.</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> _WIN32_WINNT            <span class="hljs-comment">// Specifies that the minimum required platform is Windows Vista.</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _WIN32_WINNT 0x0600     <span class="hljs-comment">// Change this to the appropriate value to target other versions of Windows.</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> _WIN32_WINDOWS          <span class="hljs-comment">// Specifies that the minimum required platform is Windows 98.</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _WIN32_WINDOWS 0x0410 <span class="hljs-comment">// Change this to the appropriate value to target Windows Me or later.</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span>
+
+<span class="hljs-meta">#<span class="hljs-keyword">ifndef</span> _WIN32_IE                       <span class="hljs-comment">// Specifies that the minimum required platform is Internet Explorer 7.0.</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">define</span> _WIN32_IE 0x0700        <span class="hljs-comment">// Change this to the appropriate value to target other versions of IE.</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">endif</span></span></code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/StringSample.rc <span class="lang">Resource script</span></figcaption>
+<pre><code class="hljs">//Microsoft Visual C++ generated resource script.
+//
+#include &quot;resource.h&quot;
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include &quot;afxres.h&quot;
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE 9, 1
+#pragma code_page(1252)
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE
+BEGIN
+    &quot;resource.h\0&quot;
+END
+
+2 TEXTINCLUDE
+BEGIN
+    &quot;#include &quot;&quot;afxres.h&quot;&quot;\r\n&quot;
+    &quot;\0&quot;
+END
+
+3 TEXTINCLUDE
+BEGIN
+    &quot;\r\n&quot;
+    &quot;\0&quot;
+END
+
+#endif    // APSTUDIO_INVOKED
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+   IDS_APP_TITLE       &quot;StringSample&quot;
+END
+
+#endif
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#ifndef _AFXDLL
+#include &quot;afxres.rc&quot;
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED</code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/StringSample.sln <span class="lang">Solution file</span></figcaption>
+<pre><code class="hljs">﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project(&quot;{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}&quot;) = &quot;StringSample&quot;, &quot;StringSample.vcproj&quot;, &quot;{AAA006C9-0342-4768-930B-E2406DFB49DA}&quot;
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AAA006C9-0342-4768-930B-E2406DFB49DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AAA006C9-0342-4768-930B-E2406DFB49DA}.Debug|Win32.Build.0 = Debug|Win32
+		{AAA006C9-0342-4768-930B-E2406DFB49DA}.Release|Win32.ActiveCfg = Release|Win32
+		{AAA006C9-0342-4768-930B-E2406DFB49DA}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal</code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/StringSample.vcproj <span class="lang">Project file</span></figcaption>
+<pre><code class="hljs"><span class="hljs-meta">&lt;?xml version=<span class="hljs-string">&quot;1.0&quot;</span> encoding=<span class="hljs-string">&quot;Windows-1252&quot;</span>?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">VisualStudioProject</span>
+	<span class="hljs-attr">ProjectType</span>=<span class="hljs-string">&quot;Visual C++&quot;</span>
+	<span class="hljs-attr">Version</span>=<span class="hljs-string">&quot;9.00&quot;</span>
+	<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;StringSample&quot;</span>
+	<span class="hljs-attr">ProjectGUID</span>=<span class="hljs-string">&quot;{AAA006C9-0342-4768-930B-E2406DFB49DA}&quot;</span>
+	<span class="hljs-attr">RootNamespace</span>=<span class="hljs-string">&quot;StringSample&quot;</span>
+	<span class="hljs-attr">Keyword</span>=<span class="hljs-string">&quot;Win32Proj&quot;</span>
+	<span class="hljs-attr">TargetFrameworkVersion</span>=<span class="hljs-string">&quot;196613&quot;</span>
+	&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">Platforms</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">Platform</span>
+			<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;Win32&quot;</span>
+		/&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">Platforms</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">ToolFiles</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">ToolFiles</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">Configurations</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">Configuration</span>
+			<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;Debug|Win32&quot;</span>
+			<span class="hljs-attr">OutputDirectory</span>=<span class="hljs-string">&quot;$(SolutionDir)$(ConfigurationName)&quot;</span>
+			<span class="hljs-attr">IntermediateDirectory</span>=<span class="hljs-string">&quot;$(ConfigurationName)&quot;</span>
+			<span class="hljs-attr">ConfigurationType</span>=<span class="hljs-string">&quot;1&quot;</span>
+			<span class="hljs-attr">UseOfMFC</span>=<span class="hljs-string">&quot;2&quot;</span>
+			<span class="hljs-attr">CharacterSet</span>=<span class="hljs-string">&quot;1&quot;</span>
+			&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCPreBuildEventTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCCustomBuildTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCXMLDataGeneratorTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCWebServiceProxyGeneratorTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCMIDLTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCCLCompilerTool&quot;</span>
+				<span class="hljs-attr">Optimization</span>=<span class="hljs-string">&quot;0&quot;</span>
+				<span class="hljs-attr">PreprocessorDefinitions</span>=<span class="hljs-string">&quot;WIN32;_DEBUG;_CONSOLE&quot;</span>
+				<span class="hljs-attr">MinimalRebuild</span>=<span class="hljs-string">&quot;true&quot;</span>
+				<span class="hljs-attr">BasicRuntimeChecks</span>=<span class="hljs-string">&quot;3&quot;</span>
+				<span class="hljs-attr">RuntimeLibrary</span>=<span class="hljs-string">&quot;3&quot;</span>
+				<span class="hljs-attr">UsePrecompiledHeader</span>=<span class="hljs-string">&quot;2&quot;</span>
+				<span class="hljs-attr">WarningLevel</span>=<span class="hljs-string">&quot;3&quot;</span>
+				<span class="hljs-attr">DebugInformationFormat</span>=<span class="hljs-string">&quot;4&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCManagedResourceCompilerTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCResourceCompilerTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCPreLinkEventTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCLinkerTool&quot;</span>
+				<span class="hljs-attr">LinkIncremental</span>=<span class="hljs-string">&quot;2&quot;</span>
+				<span class="hljs-attr">GenerateDebugInformation</span>=<span class="hljs-string">&quot;true&quot;</span>
+				<span class="hljs-attr">SubSystem</span>=<span class="hljs-string">&quot;1&quot;</span>
+				<span class="hljs-attr">TargetMachine</span>=<span class="hljs-string">&quot;1&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCALinkTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCManifestTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCXDCMakeTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCBscMakeTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCFxCopTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCAppVerifierTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCPostBuildEventTool&quot;</span>
+			/&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">Configuration</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">Configuration</span>
+			<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;Release|Win32&quot;</span>
+			<span class="hljs-attr">OutputDirectory</span>=<span class="hljs-string">&quot;$(SolutionDir)$(ConfigurationName)&quot;</span>
+			<span class="hljs-attr">IntermediateDirectory</span>=<span class="hljs-string">&quot;$(ConfigurationName)&quot;</span>
+			<span class="hljs-attr">ConfigurationType</span>=<span class="hljs-string">&quot;1&quot;</span>
+			<span class="hljs-attr">UseOfMFC</span>=<span class="hljs-string">&quot;2&quot;</span>
+			<span class="hljs-attr">CharacterSet</span>=<span class="hljs-string">&quot;1&quot;</span>
+			<span class="hljs-attr">WholeProgramOptimization</span>=<span class="hljs-string">&quot;1&quot;</span>
+			&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCPreBuildEventTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCCustomBuildTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCXMLDataGeneratorTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCWebServiceProxyGeneratorTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCMIDLTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCCLCompilerTool&quot;</span>
+				<span class="hljs-attr">Optimization</span>=<span class="hljs-string">&quot;2&quot;</span>
+				<span class="hljs-attr">EnableIntrinsicFunctions</span>=<span class="hljs-string">&quot;true&quot;</span>
+				<span class="hljs-attr">PreprocessorDefinitions</span>=<span class="hljs-string">&quot;WIN32;NDEBUG;_CONSOLE&quot;</span>
+				<span class="hljs-attr">RuntimeLibrary</span>=<span class="hljs-string">&quot;2&quot;</span>
+				<span class="hljs-attr">EnableFunctionLevelLinking</span>=<span class="hljs-string">&quot;true&quot;</span>
+				<span class="hljs-attr">UsePrecompiledHeader</span>=<span class="hljs-string">&quot;2&quot;</span>
+				<span class="hljs-attr">WarningLevel</span>=<span class="hljs-string">&quot;3&quot;</span>
+				<span class="hljs-attr">DebugInformationFormat</span>=<span class="hljs-string">&quot;3&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCManagedResourceCompilerTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCResourceCompilerTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCPreLinkEventTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCLinkerTool&quot;</span>
+				<span class="hljs-attr">LinkIncremental</span>=<span class="hljs-string">&quot;1&quot;</span>
+				<span class="hljs-attr">GenerateDebugInformation</span>=<span class="hljs-string">&quot;true&quot;</span>
+				<span class="hljs-attr">SubSystem</span>=<span class="hljs-string">&quot;1&quot;</span>
+				<span class="hljs-attr">OptimizeReferences</span>=<span class="hljs-string">&quot;2&quot;</span>
+				<span class="hljs-attr">EnableCOMDATFolding</span>=<span class="hljs-string">&quot;2&quot;</span>
+				<span class="hljs-attr">TargetMachine</span>=<span class="hljs-string">&quot;1&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCALinkTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCManifestTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCXDCMakeTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCBscMakeTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCFxCopTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCAppVerifierTool&quot;</span>
+			/&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+				<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCPostBuildEventTool&quot;</span>
+			/&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">Configuration</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">Configurations</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">References</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">References</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">Files</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">Filter</span>
+			<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;Source Files&quot;</span>
+			<span class="hljs-attr">Filter</span>=<span class="hljs-string">&quot;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx&quot;</span>
+			<span class="hljs-attr">UniqueIdentifier</span>=<span class="hljs-string">&quot;{4FC737F1-C7A5-4376-A066-2A32D752A2FF}&quot;</span>
+			&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">File</span>
+				<span class="hljs-attr">RelativePath</span>=<span class="hljs-string">&quot;.\stdafx.cpp&quot;</span>
+				&gt;</span>
+				<span class="hljs-tag">&lt;<span class="hljs-name">FileConfiguration</span>
+					<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;Debug|Win32&quot;</span>
+					&gt;</span>
+					<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+						<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCCLCompilerTool&quot;</span>
+						<span class="hljs-attr">UsePrecompiledHeader</span>=<span class="hljs-string">&quot;1&quot;</span>
+					/&gt;</span>
+				<span class="hljs-tag">&lt;/<span class="hljs-name">FileConfiguration</span>&gt;</span>
+				<span class="hljs-tag">&lt;<span class="hljs-name">FileConfiguration</span>
+					<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;Release|Win32&quot;</span>
+					&gt;</span>
+					<span class="hljs-tag">&lt;<span class="hljs-name">Tool</span>
+						<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;VCCLCompilerTool&quot;</span>
+						<span class="hljs-attr">UsePrecompiledHeader</span>=<span class="hljs-string">&quot;1&quot;</span>
+					/&gt;</span>
+				<span class="hljs-tag">&lt;/<span class="hljs-name">FileConfiguration</span>&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">File</span>
+				<span class="hljs-attr">RelativePath</span>=<span class="hljs-string">&quot;.\StringSample.cpp&quot;</span>
+				&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">Filter</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">Filter</span>
+			<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;Header Files&quot;</span>
+			<span class="hljs-attr">Filter</span>=<span class="hljs-string">&quot;h;hpp;hxx;hm;inl;inc;xsd&quot;</span>
+			<span class="hljs-attr">UniqueIdentifier</span>=<span class="hljs-string">&quot;{93995380-89BD-4b04-88EB-625FBE52EBFB}&quot;</span>
+			&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">File</span>
+				<span class="hljs-attr">RelativePath</span>=<span class="hljs-string">&quot;.\Resource.h&quot;</span>
+				&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">File</span>
+				<span class="hljs-attr">RelativePath</span>=<span class="hljs-string">&quot;.\stdafx.h&quot;</span>
+				&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">File</span>
+				<span class="hljs-attr">RelativePath</span>=<span class="hljs-string">&quot;.\StringSample.h&quot;</span>
+				&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">File</span>
+				<span class="hljs-attr">RelativePath</span>=<span class="hljs-string">&quot;.\targetver.h&quot;</span>
+				&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">Filter</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">Filter</span>
+			<span class="hljs-attr">Name</span>=<span class="hljs-string">&quot;Resource Files&quot;</span>
+			<span class="hljs-attr">Filter</span>=<span class="hljs-string">&quot;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav&quot;</span>
+			<span class="hljs-attr">UniqueIdentifier</span>=<span class="hljs-string">&quot;{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}&quot;</span>
+			&gt;</span>
+			<span class="hljs-tag">&lt;<span class="hljs-name">File</span>
+				<span class="hljs-attr">RelativePath</span>=<span class="hljs-string">&quot;.\StringSample.rc&quot;</span>
+				&gt;</span>
+			<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">Filter</span>&gt;</span>
+		<span class="hljs-tag">&lt;<span class="hljs-name">File</span>
+			<span class="hljs-attr">RelativePath</span>=<span class="hljs-string">&quot;.\ReadMe.txt&quot;</span>
+			&gt;</span>
+		<span class="hljs-tag">&lt;/<span class="hljs-name">File</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">Files</span>&gt;</span>
+	<span class="hljs-tag">&lt;<span class="hljs-name">Globals</span>&gt;</span>
+	<span class="hljs-tag">&lt;/<span class="hljs-name">Globals</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">VisualStudioProject</span>&gt;</span></code></pre>
+</figure>
+<figure class="code">
+<figcaption>StringSample/ReadMe.txt <span class="lang">Text</span></figcaption>
+<pre><code class="hljs">========================================================================
+    CONSOLE APPLICATION : StringSample Project Overview
+========================================================================
+
+AppWizard has created this StringSample application for you.
+
+This file contains a summary of what you will find in each of the files that
+make up your StringSample application.
+
+
+StringSample.vcproj
+    This is the main project file for VC++ projects generated using an Application Wizard.
+    It contains information about the version of Visual C++ that generated the file, and
+    information about the platforms, configurations, and project features selected with the
+    Application Wizard.
+
+StringSample.cpp
+    This is the main application source file.
+
+/////////////////////////////////////////////////////////////////////////////
+AppWizard has created the following resources:
+
+StringSample.rc
+    This is a listing of all of the Microsoft Windows resources that the
+    program uses.  It includes the icons, bitmaps, and cursors that are stored
+    in the RES subdirectory.  This file can be directly edited in Microsoft
+    Visual C++.
+
+Resource.h
+    This is the standard header file, which defines new resource IDs.
+    Microsoft Visual C++ reads and updates this file.
+
+/////////////////////////////////////////////////////////////////////////////
+Other standard files:
+
+StdAfx.h, StdAfx.cpp
+    These files are used to build a precompiled header (PCH) file
+    named StringSample.pch and a precompiled types file named StdAfx.obj.
+
+/////////////////////////////////////////////////////////////////////////////
+Other notes:
+
+AppWizard uses &quot;TODO:&quot; comments to indicate parts of the source code you
+should add to or customize.
+
+/////////////////////////////////////////////////////////////////////////////</code></pre>
+</figure>
+</article>
+<p class="back"><a href="https://redtomram-gif.github.io/thottams-blog-archive/">&larr; All posts</a></p>
+</main>
+<footer class="site">
+  Part of the <a href="https://redtomram-gif.github.io/thottams-blog-archive/">MSDN blog archive</a>.
+  Source on <a href="https://github.com/redtomram-gif/blog-mfc-cstring-getlength">GitHub</a>.
+</footer>
+</body>
+</html>
