@@ -53,29 +53,29 @@ CWinApp theApp;
 
 <span class="hljs-type">int</span> _tmain(<span class="hljs-type">int</span> argc, TCHAR* argv[], TCHAR* envp[])
 {
-	<span class="hljs-type">int</span> nRetCode = <span class="hljs-number">0</span>;
+    <span class="hljs-type">int</span> nRetCode = <span class="hljs-number">0</span>;
     CString sampleString = <span class="hljs-built_in">CString</span>(_T(<span class="hljs-string">&quot;Sample\0String&quot;</span>), <span class="hljs-number">14</span>);
-	<span class="hljs-type">int</span> len = sampleString.<span class="hljs-built_in">GetLength</span>();  <span class="hljs-comment">// len is 14</span>
+    <span class="hljs-type">int</span> len = sampleString.<span class="hljs-built_in">GetLength</span>();  <span class="hljs-comment">// len is 14</span>
 
-	CString trimmedString = sampleString.<span class="hljs-built_in">Trim</span>(); <span class="hljs-comment">// trimmedString = &quot;Sample&quot;</span>
-	CString newstring = <span class="hljs-built_in">CString</span>(sampleString); <span class="hljs-comment">// newString = &quot;Sample&quot;</span>
-	len = newstring.<span class="hljs-built_in">GetLength</span>(); <span class="hljs-comment">// len = 14</span>
+    CString trimmedString = sampleString.<span class="hljs-built_in">Trim</span>(); <span class="hljs-comment">// trimmedString = &quot;Sample&quot;</span>
+    CString newstring = <span class="hljs-built_in">CString</span>(sampleString); <span class="hljs-comment">// newString = &quot;Sample&quot;</span>
+    len = newstring.<span class="hljs-built_in">GetLength</span>(); <span class="hljs-comment">// len = 14</span>
 
-	newstring.<span class="hljs-built_in">GetBuffer</span>()
+    newstring.<span class="hljs-built_in">GetBuffer</span>()
 
-	<span class="hljs-comment">// initialize MFC and print and error on failure</span>
-	<span class="hljs-keyword">if</span> (!<span class="hljs-built_in">AfxWinInit</span>(::<span class="hljs-built_in">GetModuleHandle</span>(<span class="hljs-literal">NULL</span>), <span class="hljs-literal">NULL</span>, ::<span class="hljs-built_in">GetCommandLine</span>(), <span class="hljs-number">0</span>))
-	{
-		<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> change error code to suit your needs</span>
-		_tprintf(_T(<span class="hljs-string">&quot;Fatal Error: MFC initialization failed\n&quot;</span>));
-		nRetCode = <span class="hljs-number">1</span>;
-	}
-	<span class="hljs-keyword">else</span>
-	{
-		<span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> code your application&#x27;s behavior here.</span>
-	}
+    <span class="hljs-comment">// initialize MFC and print and error on failure</span>
+    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">AfxWinInit</span>(::<span class="hljs-built_in">GetModuleHandle</span>(<span class="hljs-literal">NULL</span>), <span class="hljs-literal">NULL</span>, ::<span class="hljs-built_in">GetCommandLine</span>(), <span class="hljs-number">0</span>))
+    {
+        <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> change error code to suit your needs</span>
+        _tprintf(_T(<span class="hljs-string">&quot;Fatal Error: MFC initialization failed\n&quot;</span>));
+        nRetCode = <span class="hljs-number">1</span>;
+    }
+    <span class="hljs-keyword">else</span>
+    {
+        <span class="hljs-comment">// <span class="hljs-doctag">TODO:</span> code your application&#x27;s behavior here.</span>
+    }
 
-	<span class="hljs-keyword">return</span> nRetCode;
+    <span class="hljs-keyword">return</span> nRetCode;
 }</code></pre>
 </figure>
 <figure class="code">
@@ -144,8 +144,8 @@ CWinApp theApp;
 <pre><code class="hljs"><span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span>
 
 <span class="hljs-comment">// The following macros define the minimum required platform.  The minimum required platform</span>
-<span class="hljs-comment">// is the earliest version of Windows, Internet Explorer etc. that has the necessary features to run </span>
-<span class="hljs-comment">// your application.  The macros work by enabling all features available on platform versions up to and </span>
+<span class="hljs-comment">// is the earliest version of Windows, Internet Explorer etc. that has the necessary features to run</span>
+<span class="hljs-comment">// your application.  The macros work by enabling all features available on platform versions up to and</span>
 <span class="hljs-comment">// including the version specified.</span>
 
 <span class="hljs-comment">// Modify the following defines if you have to target a platform prior to the ones specified below.</span>
