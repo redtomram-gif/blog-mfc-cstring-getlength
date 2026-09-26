@@ -6,9 +6,9 @@ Originally published at [CString and GetLength](https://blogs.msdn.microsoft.com
 
 ## Building
 
-```text
-Open StringSample\StringSample.sln in Visual Studio and build.
-```
+<!-- Console -->
+
+    Open StringSample\StringSample.sln in Visual Studio and build.
 
 ## Note
 
